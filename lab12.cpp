@@ -24,6 +24,7 @@ int main() {
             y = ((x + 10.0) / (z + 3.0)) * ((12.0 + pow(x, 2)) / 3.0) - pow(z, z + 2.0) + sqrt(cos(pow(x, 2)));
         }
         cout << "Значення y дорівнює: " << y << endl;
+        cout << "УРА ";
         break;
     }
 
