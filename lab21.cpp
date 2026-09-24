@@ -6,7 +6,7 @@ using namespace std;
 int main()
 {
     double z {0.5236};
-    double eps {0.00001};
+    const double eps {0.00001};
     double u, S;
 
     int Pr, n, k;
@@ -15,11 +15,17 @@ int main()
     do
     {
     cout << "Оберіть дію:" << endl;
+    cout << "0 - вийти з програми" << endl;
     cout << "1 - знайти n-й елемент ряду" << endl;
     cout << "2 - знайти суму n перших елементів" << endl;
     cout << "3 - знайти суму ряду з точністю eps" << endl;
 
     cin >> Pr;
+
+        if (Pr == 0)
+        {
+            break;
+        }
 
         if (Pr >= 1 && Pr <= 3)
         {
@@ -34,7 +40,7 @@ int main()
 
                     for (k = 0; k < n; k++)
                     {
-                        u = u * (-z * z) /
+                        u *= (-z * z) /
                             ((2 * k + 2) * (2 * k + 3));
                     }
 
@@ -95,10 +101,10 @@ int main()
 
         cout << endl;
         cout << "Продовжити роботу?" << endl;
-        cout << "1 - так, 0 - ні: ";
+        cout << "6 - так, 7 - ні: ";
         cin >> a;
 
-    } while (a != 0);
+    } while (a != 7);
 
     return 0;
 }
