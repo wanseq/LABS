@@ -5,8 +5,8 @@ using namespace std;
 
 int main()
 {
-    double z = 0.5236;
-    double eps = 0.00001;
+    double z {0.5236};
+    double eps {0.00001};
     double u, S;
 
     int Pr, n, k;
