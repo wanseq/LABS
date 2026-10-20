@@ -160,7 +160,7 @@ void task1()
     delete[] b;
 }
 
-// Завдання 2 та 3
+// завдання 2 та 3
 void task2_3(int task)
 {
     cout << "Кількість елементів A: ";
@@ -171,16 +171,16 @@ void task2_3(int task)
 
     int mode = inputMode();
 
-    int* a = new int[n];
+    int* a = new int[n]; // створення масивів
     int* b = new int[m];
 
-    cout << "Заповнення A:\n";
+    cout << "Заповнення A:\n"; // заповнення масивів
     fillArray(a, n, mode);
 
     cout << "Заповнення B:\n";
     fillArray(b, m, mode);
 
-    cout << "A: ";
+    cout << "A: ";  // виведення масивів
     printArray(a, n);
 
     cout << "B: ";
@@ -233,7 +233,7 @@ int* rowSums(int** a, int m, int n)
     return result;
 }
 
-int* diagonal(int** a, int m, int n, int& size)
+int* diagonal(int** a, int m, int n, int& size) // функція для отримання головної діагоналі
 {
     size = (m < n) ? m : n;
     int* result = new int[size];
@@ -292,7 +292,7 @@ int main()
         cout << "3 - спільні елементи A та B\n";
         cout << "4 - суми мінімуму та максимуму рядків\n";
         cout << "5 - головна діагональ\n";
-        cout << "0 - вихід\n";
+        cout << "100 - вихід\n";
 
         cin >> choice;
 
@@ -312,14 +312,14 @@ int main()
                 task4_5(choice);
                 break;
 
-            case 0:
+            case 100:
                 break;
 
             default:
                 cout << "Неправильний вибір\n";
         }
     }
-    while (choice != 0);
+    while (choice != 100);
 
     return 0;
 }
