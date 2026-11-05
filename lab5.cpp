@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <utility>
 using namespace std;
 
 int inputSize()
@@ -119,7 +118,7 @@ void deleteMatrix(int** a, int m)
     delete[] a;
 }
 
-// Завдання 1
+// завдання 1
 void task1()
 {
     cout << "Кількість елементів: ";
