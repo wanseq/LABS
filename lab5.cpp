@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -74,6 +75,31 @@ bool contains(int* a, int n, int value)
     return false;
 }
 
+int fillUniqueArray(int* a, int n, int mode)
+{
+    fillArray(a, n, mode);
+    return n;
+}
+
+void printUniqueArray(int* a, int n)
+{
+    bool empty = true;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (!contains(a, i, a[i]))
+        {
+            cout << a[i] << " ";
+            empty = false;
+        }
+    }
+
+    if (empty)
+        cout << "Масив порожній";
+
+    cout << endl;
+}
+
 int** createMatrix(int m, int n, int mode)
 {
     int** a = new int*[m];
@@ -142,7 +168,7 @@ void task1()
     cout << "Від'ємних елементів з непарним індексом: ";
     cout << count << endl;
 
-    int size = n / 3;
+    int size = (n + 1) / 3;
     int* b = new int[size];
     int k = 0;
 
@@ -153,7 +179,7 @@ void task1()
     }
 
     cout << "Кожний третій елемент: ";
-    printArray(b, size);
+    printArray(b, k);
 
     delete[] a;
     delete[] b;
@@ -174,16 +200,16 @@ void task2_3(int task)
     int* b = new int[m];
 
     cout << "Заповнення A:\n"; // заповнення масивів
-    fillArray(a, n, mode);
+    fillUniqueArray(a, n, mode);
 
     cout << "Заповнення B:\n";
-    fillArray(b, m, mode);
+    fillUniqueArray(b, m, mode);
 
-    cout << "A: ";  // виведення масивів
-    printArray(a, n);
+    cout << "A: "; // виведення масивів
+    printUniqueArray(a, n);
 
     cout << "B: ";
-    printArray(b, m);
+    printUniqueArray(b, m);
 
     int* c = new int[m];
     int k = 0;
@@ -192,8 +218,9 @@ void task2_3(int task)
     {
         bool found = contains(a, n, b[i]);
 
-        if ((task == 2 && !found) ||
-            (task == 3 && found))
+        if (((task == 2 && !found) ||
+             (task == 3 && found)) &&
+            !contains(c, k, b[i]))
         {
             c[k] = b[i];
             k++;
