@@ -36,20 +36,37 @@ int inputMode()
 
 void fillArray(int* a, int n, int mode)
 {
+    if (mode == 1)
+        {
+
     for (int i = 0; i < n; i++)
     {
-        if (mode == 1)
-        {
             cout << "[" << i << "] = ";
             cin >> a[i];
+            if (Unique(a[i], a, i))
+            {
+                cout << "Елемент " << a[i] << " вже існує. Введіть інший елемент.\n";
+                i--;
+            }
         }
-        else
+        return;
+    }
+      for (int i = 0; i < n; i++)
         {
             a[i] = rand() % 21 - 10;
         }
     }
-}
+bool Unique(int n, const int* a, int kol)
 
+{
+    for (int i = 0; i < kol; i++)
+    {
+        if (a[i] == n)
+            return true;
+    }
+
+    return false;    
+}
 void printArray(int* a, int n)
 {
     if (n == 0)
