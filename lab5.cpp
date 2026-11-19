@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -9,16 +8,13 @@ int inputSize()
     int n;
     do
     {
-        
         cin >> n;
-         if (n <= 0)
+        if (n <= 0)
             cout << "Введіть додатне число: ";
-        if (n > 10)
-            cout << "Введіть число не більше 10: "; 
-
-       
+        else if (n > 10)
+            cout << "Введіть число не більше 10: ";
     }
-    while (n <= 0);
+    while (n <= 0 || n > 10);
 
     return n;
 }
@@ -38,8 +34,22 @@ int inputMode()
     return mode;
 }
 
-bool Unique(int n, const int* a, int kol)
+// вводимо числа з перевіркою допустимого діапазону [min, max]
+int inputRange(int min, int max)
+{
+    int x;
 
+    while (!(cin >> x) || x < min || x > max)
+    {
+        cin.clear();             // скидаємо помилку, якщо ввели не число
+        cin.ignore(1000, '\n');  // видаляємо зайві символи з потоку
+        cout << "No! Введіть число від " << min << " до " << max << ": ";
+    }
+
+    return x;
+}
+
+bool Unique(int n, const int* a, int kol)
 {
     for (int i = 0; i < kol; i++)
     {
@@ -47,35 +57,43 @@ bool Unique(int n, const int* a, int kol)
             return true;
     }
 
-    return false;    
+    return false;
 }
 
-void fillArray(int* a, int n, int mode)
+bool contains(const int* a, int n, int value)
 {
-    if (mode == 1)
-        {
-            cout << "Введіть eлементи в діапазоні від 1 до 10: ";
     for (int i = 0; i < n; i++)
     {
+        if (a[i] == value)
+            return true;
+    }
+
+    return false;
+}
+
+void fillArray(int* a, int n, int mode, int min, int max)
+{
+    if (mode == 1)
+    {
+        cout << "Введіть елементи від " << min << " до " << max << ":\n";
+        for (int i = 0; i < n; i++)
+        {
             cout << "[" << i << "] = ";
-            cin >> a[i];
+            a[i] = inputRange(min, max);
             if (Unique(a[i], a, i))
             {
                 cout << "Елемент " << a[i] << " вже існує. Введіть інший елемент.\n";
                 i--;
             }
-            
         }
         return;
     }
-      for (int i = 0; i < n; i++)
-        {
-            a[i] = rand() % 21 - 10;
-        }
-    }
 
+    for (int i = 0; i < n; i++)
+        a[i] = rand() % (max - min + 1) + min;
+}
 
-void printArray(int* a, int n)
+void printArray(const int* a, int n)
 {
     if (n == 0)
     {
@@ -89,38 +107,13 @@ void printArray(int* a, int n)
     cout << endl;
 }
 
-bool contains(int* a, int n, int value)
+void printUniqueArray(const int* a, int n)
 {
-    for (int i = 0; i < n; i++)
-    {
-        if (a[i] == value)
-            return true;
-    }
-
-    return false;
-}
-
-int fillUniqueArray(int* a, int n, int mode)
-{
-    fillArray(a, n, mode);
-    return n;
-}
-
-void printUniqueArray(int* a, int n)
-{
-    bool empty = true;
-
     for (int i = 0; i < n; i++)
     {
         if (!contains(a, i, a[i]))
-        {
             cout << a[i] << " ";
-            empty = false;
-        }
     }
-
-    if (empty)
-        cout << "Масив порожній";
 
     cout << endl;
 }
@@ -177,7 +170,7 @@ void task1()
     int mode = inputMode();
 
     int* a = new int[n];
-    fillArray(a, n, mode);
+    fillArray(a, n, mode, -10, 10);
 
     cout << "Початковий масив: ";
     printArray(a, n);
@@ -193,8 +186,7 @@ void task1()
     cout << "Від'ємних елементів з непарним індексом: ";
     cout << count << endl;
 
-    int size = (n + 1) / 3;
-    int* b = new int[size];
+    int* b = new int[n / 3];
     int k = 0;
 
     for (int i = 2; i < n; i += 3)
@@ -225,10 +217,10 @@ void task2_3(int task)
     int* b = new int[m];
 
     cout << "Заповнення A:\n"; // заповнення масивів
-    fillUniqueArray(a, n, mode);
+    fillArray(a, n, mode, 1, 10);
 
     cout << "Заповнення B:\n";
-    fillUniqueArray(b, m, mode);
+    fillArray(b, m, mode, 1, 10);
 
     cout << "A: "; // виведення масивів
     printUniqueArray(a, n);
@@ -243,9 +235,7 @@ void task2_3(int task)
     {
         bool found = contains(a, n, b[i]);
 
-        if (((task == 2 && !found) ||
-             (task == 3 && found)) &&
-            !contains(c, k, b[i]))
+        if (found == (task == 3) && !contains(c, k, b[i]))
         {
             c[k] = b[i];
             k++;
