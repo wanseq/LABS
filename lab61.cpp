@@ -17,8 +17,15 @@ unsigned int firstCodePoint(const char* s)
     return c;
 }
 
+void printHelloWorld()
+{
+    cout << "Hello World" << endl;
+}
+
 int main()
 {
+    printHelloWorld();
+
     int n;
     cout << "Введіть кількість рядків: ";
     cin >> n;
