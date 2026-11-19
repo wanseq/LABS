@@ -9,10 +9,14 @@ int inputSize()
     int n;
     do
     {
+        
         cin >> n;
-
-        if (n <= 0)
+         if (n <= 0)
             cout << "Введіть додатне число: ";
+        if (n > 10)
+            cout << "Введіть число не більше 10: "; 
+
+       
     }
     while (n <= 0);
 
@@ -34,28 +38,6 @@ int inputMode()
     return mode;
 }
 
-void fillArray(int* a, int n, int mode)
-{
-    if (mode == 1)
-        {
-
-    for (int i = 0; i < n; i++)
-    {
-            cout << "[" << i << "] = ";
-            cin >> a[i];
-            if (Unique(a[i], a, i))
-            {
-                cout << "Елемент " << a[i] << " вже існує. Введіть інший елемент.\n";
-                i--;
-            }
-        }
-        return;
-    }
-      for (int i = 0; i < n; i++)
-        {
-            a[i] = rand() % 21 - 10;
-        }
-    }
 bool Unique(int n, const int* a, int kol)
 
 {
@@ -67,6 +49,32 @@ bool Unique(int n, const int* a, int kol)
 
     return false;    
 }
+
+void fillArray(int* a, int n, int mode)
+{
+    if (mode == 1)
+        {
+            cout << "Введіть eлементи в діапазоні від 1 до 10: ";
+    for (int i = 0; i < n; i++)
+    {
+            cout << "[" << i << "] = ";
+            cin >> a[i];
+            if (Unique(a[i], a, i))
+            {
+                cout << "Елемент " << a[i] << " вже існує. Введіть інший елемент.\n";
+                i--;
+            }
+            
+        }
+        return;
+    }
+      for (int i = 0; i < n; i++)
+        {
+            a[i] = rand() % 21 - 10;
+        }
+    }
+
+
 void printArray(int* a, int n)
 {
     if (n == 0)
