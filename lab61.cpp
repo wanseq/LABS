@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <algorithm>
 using namespace std;
 
 // Завдання:
@@ -10,65 +11,52 @@ using namespace std;
 // зокрема кирилиці. Вивести відсортований масив
 // рядків та звільнити виділену динамічну пам'ять.
 
-// Повертає код першого символа рядка (враховує UTF-8, кирилиця = 2 байти)
-unsigned int firstCodePoint(const char* s)
+// Алфавіт (українська + російська) у порядку алфавіту, мала й велика літери поруч.
+// Кирилична літера в UTF-8 займає 2 байти, тому одна пара («аА») = 4 байти.
+const char* ALPHABET = "аАбБвВгГґҐдДеЕєЄёЁжЖзЗиИіІїЇйЙкКлЛмМнНоОпПрРсСтТуУфФхХцЦчЧшШщЩъЪыЫьЬэЭюЮяЯ";
+
+// Номер першої літери рядка в алфавіті (-1, якщо її там немає)
+int letterRank(const char* s)
 {
-    unsigned char c = s[0];
-    if (c < 0x80) return c;                       // ASCII (1 байт)
-    if ((c >> 5) == 0x6 && s[1])                  // 2 байти (кирилиця)
-        return ((c & 0x1F) << 6) | (s[1] & 0x3F);
-    if ((c >> 4) == 0xE && s[1] && s[2])          // 3 байти
-        return ((c & 0x0F) << 12) | ((s[1] & 0x3F) << 6) | (s[2] & 0x3F);
-    if ((c >> 3) == 0x1E && s[1] && s[2] && s[3]) // 4 байти
-        return ((c & 0x07) << 18) | ((s[1] & 0x3F) << 12) |
-               ((s[2] & 0x3F) << 6) | (s[3] & 0x3F);
-    return c;
+    if (!s[0])
+        return -1;
+
+    char letter[3] = { s[0], s[1], '\0' };
+    const char* p = strstr(ALPHABET, letter);
+
+    return p ? (p - ALPHABET) / 4 : -1;
 }
 
-void printHelloWorld()
+// порівняння для сортування за спаданням
+bool byRankDesc(const char* a, const char* b)
 {
-    cout << "Hello World" << endl;
+    return letterRank(a) > letterRank(b);
 }
 
 int main()
 {
-    printHelloWorld();
-
     int n;
     cout << "Введіть кількість рядків: ";
-    cin >> n;
-    cin.ignore();
-
-    char* str_temp = new char[255]; 
-    char** m_str = new char*[n];    
-    if (!m_str)
+    while (!(cin >> n) || n < 1)
     {
-        cerr << "Помилка під час розподілу пам'яті";
-        return 1;
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "Введіть додатне число: ";
     }
+    cin.ignore(1000, '\n');
+
+    char str_temp[255];
+    char** m_str = new char*[n];
 
     for (int i = 0; i < n; i++)
     {
         cout << "Уведіть " << i + 1 << "-ий рядок: ";
         cin.getline(str_temp, 255);
         m_str[i] = new char[strlen(str_temp) + 1];
-        if (!m_str[i])
-        {
-            cerr << "Помилка під час розподілу пам'яті";
-            return 1;
-        }
         strcpy(m_str[i], str_temp);
     }
-    delete[] str_temp;
 
-    for (int i = 0; i < n - 1; i++)
-        for (int j = 0; j < n - 1 - i; j++)
-            if (firstCodePoint(m_str[j]) < firstCodePoint(m_str[j + 1]))
-            {
-                char* tmp = m_str[j];
-                m_str[j] = m_str[j + 1];
-                m_str[j + 1] = tmp;
-            }
+    stable_sort(m_str, m_str + n, byRankDesc);
 
     cout << "\nВідсортований масив рядків:\n";
     for (int i = 0; i < n; i++)
