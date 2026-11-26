@@ -75,10 +75,10 @@ int main() {
         {"Kotsiubynsky", "Shadows", 2013},   {"Ukrainka", "Contra spem", 2019}
     }, N };
 
-    char author[30], title[50];
+    char author[30], title[50]; // масиви для введення прізвища автора та назви книги
 
     cout << "Введіть прізвище автора: ";
-    cin.getline(author, 30);
+    cin.getline(author, 30); // бере строчку прізвища
     cout << "Книги автора за 2019-2023:\n";
     lib.findAuthor(author);
 
