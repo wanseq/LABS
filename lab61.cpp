@@ -1,8 +1,8 @@
-#include <iostream>
-#include <cstring>
-#include <algorithm>
+#include <iostream>   
+#include <cstring>    
+#include <algorithm>  
 using namespace std;
-
+ 
 // Завдання:
 // Створити динамічний масив рядків, заповнити його
 // рядками, введеними користувачем, та відсортувати
@@ -10,63 +10,63 @@ using namespace std;
 // Забезпечити коректну обробку символів UTF-8,
 // зокрема кирилиці. Вивести відсортований масив
 // рядків та звільнити виділену динамічну пам'ять.
-
+ 
 // Алфавіт (українська + російська) у порядку алфавіту, мала й велика літери поруч.
 // Кирилична літера в UTF-8 займає 2 байти, тому одна пара («аА») = 4 байти.
 const char* ALPHABET = "аАбБвВгГґҐдДеЕєЄёЁжЖзЗиИіІїЇйЙкКлЛмМнНоОпПрРсСтТуУфФхХцЦчЧшШщЩъЪыЫьЬэЭюЮяЯ";
-
+ 
 // Номер першої літери рядка в алфавіті (-1, якщо її там немає)
 int letterRank(const char* s)
 {
-    if (!s[0])
+    if (!s[0])                                    // порожній рядок — літери немає
         return -1;
-
-    char letter[3] = { s[0], s[1], '\0' };
-    const char* p = strstr(ALPHABET, letter);
-
-    return p ? (p - ALPHABET) / 4 : -1;
+ 
+    char letter[3] = { s[0], s[1], '\0' };        // перші 2 байти рядка = одна кирилична літера
+    const char* p = strstr(ALPHABET, letter);     // шукаємо її в алфавіті (nullptr, якщо не знайшли)
+ 
+    return p ? (p - ALPHABET) / 4 : -1;           // зсув у байтах / 4 = номер пари (регістр не впливає)
 }
-
+ 
 // порівняння для сортування за спаданням
 bool byRankDesc(const char* a, const char* b)
 {
-    return letterRank(a) > letterRank(b);
+    return letterRank(a) > letterRank(b);         // true — a має стояти раніше за b
 }
-
+ 
 int main()
 {
     int n;
     cout << "Введіть кількість рядків: ";
-    while (!(cin >> n) || n < 1)
+    while (!(cin >> n) || n < 1)                  // повторюємо, поки не введено додатне число
     {
-        cin.clear();
-        cin.ignore(1000, '\n');
+        cin.clear();                              // скидаємо помилку потоку (якщо ввели літери)
+        cin.ignore(1000, '\n');                   // видаляємо зайві символи з буфера
         cout << "Введіть додатне число: ";
     }
-    cin.ignore(1000, '\n');
-
-    char str_temp[255];
-    char** m_str = new char*[n];
-
+    cin.ignore(1000, '\n');                       // прибираємо Enter після числа, щоб getline не прочитав порожній рядок
+ 
+    char str_temp[255];                           // тимчасовий буфер для одного рядка
+    char** m_str = new char*[n];                  // динамічний масив із n вказівників на рядки
+ 
     for (int i = 0; i < n; i++)
     {
         cout << "Уведіть " << i + 1 << "-ий рядок: ";
-        cin.getline(str_temp, 255);
-        m_str[i] = new char[strlen(str_temp) + 1];
-        strcpy(m_str[i], str_temp);
+        cin.getline(str_temp, 255);               // читаємо рядок разом з пробілами
+        m_str[i] = new char[strlen(str_temp) + 1]; // пам'ять рівно під рядок + 1 байт для '\0'
+        strcpy(m_str[i], str_temp);               // копіюємо рядок з буфера в нову пам'ять
     }
-
-    stable_sort(m_str, m_str + n, byRankDesc);
-
+ 
+    stable_sort(m_str, m_str + n, byRankDesc);    // міняються місцями лише вказівники; однакові літери зберігають порядок вводу
+ 
     cout << "\nВідсортований масив рядків:\n";
     for (int i = 0; i < n; i++)
     {
         cout << m_str[i] << endl;
-        delete[] m_str[i];
+        delete[] m_str[i];                        // звільняємо кожен рядок
     }
-    delete[] m_str;
-
+    delete[] m_str;                             
+ 
     cout << "\nНатисніть Enter для завершення";
-    cin.get();
+    cin.get();                                    
     return 0;
 }
