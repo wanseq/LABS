@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstring>   // strcmp
-
 using namespace std;
 
 const int N = 20; // кількість книг
@@ -18,13 +17,13 @@ struct Book {
 
 // уся Бібліотека
 struct Library {
-    Book books[N];
-    int  count; // кількість книг
+    Book* books;   // вказівник на динамічний масив книг
+    int   count;   // кількість книг
 
     // назви книг автора за 2019-2023
     void findAuthor(const char* author) const {
         bool found = false;
-        for (int i = 0; i < count; ++i) {
+        for (int i = 0; i < count; ++i) { // i - індекс книги
             if (strcmp(books[i].author, author) == 0 &&
                 books[i].year >= 2019 && books[i].year <= 2023) {
                 cout << "  " << books[i].title << " (" << books[i].year << ")\n";
@@ -61,8 +60,11 @@ struct Library {
 };
 
 int main() {
+    Library lib;
+    lib.count = N;
 
-    Library lib = { {
+    // виділяємо пам'ять у купі (heap) під N книг і одразу заповнюємо
+    lib.books = new Book[lib.count] {
         {"Shevchenko", "Kobzar", 2019},      {"Franko", "Zakhar Berkut", 2021},
         {"Kotsiubynsky", "Intermezzo", 2018},{"Ukrainka", "Lisova pisnya", 2022},
         {"Shevchenko", "Haidamaky", 2023},   {"Stroustrup", "C++ Programming", 2020},
@@ -73,7 +75,7 @@ int main() {
         {"Franko", "Boryslav", 2020},        {"Zhadan", "Mesopotamia", 2018},
         {"Andrukhovych", "Moscoviada", 2021},{"Zabuzhko", "Museum", 2023},
         {"Kotsiubynsky", "Shadows", 2013},   {"Ukrainka", "Contra spem", 2019}
-    }, N };
+    };
 
     char author[30], title[50]; // масиви для введення прізвища автора та назви книги
 
@@ -87,11 +89,14 @@ int main() {
     lib.print();
 
     cout << "\nПеревидана книга: ";
-    cin.getline(title, 50);
+    cin.getline(title, 50); // бере строчку назви книги
     if (lib.zmina(title)) cout << "Рік змінено на 2023.\n";
     else cout << "Книга не знайдена.\n";
 
     cout << "\nФінальний список:\n";
     lib.print();
+
+    delete[] lib.books; // звільняємо пам'ять
+    lib.books = nullptr;
     return 0;
 }
